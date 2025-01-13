@@ -1,0 +1,16 @@
+[package]
+name = "audio_silence_remover"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hound = "3.5.1"       # For WAV file handling
+clap = { version = "4.4", features = ["derive"] }  # For CLI argument parsing
+symphonia = { version = "0.5.3", features = ["wav"] }  # Audio processing
+
+[profile.release]
+opt-level = 3         # Maximum optimization
+lto = true           # Link-time optimization
+codegen-units = 1    # Optimize for size
+panic = "abort"      # Remove panic unwinding for smaller binary
+strip = true         # Strip symbols from binary

@@ -1,0 +1,13 @@
+# Rust
+target/
+.cargo/
+.rustup/
+
+# User-specific files
+*.rs.bk
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*~
