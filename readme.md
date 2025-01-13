@@ -10,7 +10,9 @@ This tool uses a voice activity detection (VAD) algorithm to identify and remove
 
 To use this tool, simply run the following command:
 
+```
 audio_silence_remover --input <input_file.wav> --output <output_file.wav>
+```
 
 Replace `<input_file.wav>` with the path to your input WAV file, and `<output_file.wav>` with the desired path for the output WAV file.
 
