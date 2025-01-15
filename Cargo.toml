@@ -7,7 +7,7 @@ edition = "2021"
 hound = "3.5.1"       # For WAV file handling
 clap = { version = "4.4", features = ["derive"] }  # For CLI argument parsing
 symphonia = { version = "0.5.3", features = ["wav"] }  # Audio processing
-
+rayon = {version = "1.10.0"}
 [profile.release]
 opt-level = 3         # Maximum optimization
 lto = true           # Link-time optimization
