@@ -1,8 +1,8 @@
 use clap::Parser;
-use hound::{WavReader, WavWriter};
+use hound::{WavReader, WavSpec, WavWriter};
 use std::error::Error;
 use std::path::PathBuf;
-use std::time::Instant;
+// use std::time::Instant;
 use rayon;
 
 #[derive(Debug, Clone)]
@@ -102,16 +102,21 @@ impl AudioProcessor {
 
     pub fn process_file(&mut self, input_path: &PathBuf, output_path: &PathBuf) -> Result<(), Box<dyn Error>> {
         
-        let start = Instant::now();
-        println!("Processing audio file: {:?}", input_path);
-
+        // let start = Instant::now();
+        // println!("Processing audio file: {:?}", input_path);
         let mut reader = WavReader::open(input_path)?;
         let spec = reader.spec();
-        
+
+        let output_spec = WavSpec {
+            channels: 1,
+            sample_rate: spec.sample_rate,  // Keep original sample rate
+            bits_per_sample: 16,                  // Set to 16 bits for 256K bitrate
+            sample_format: hound::SampleFormat::Int,
+        };
+
         if spec.channels != 2 {
             return Err("Only stereo WAV files are supported".into());
         }
-
         // Read all samples at once
         let samples: Vec<f32> = reader
             .samples::<i32>()
@@ -141,7 +146,7 @@ impl AudioProcessor {
         };
 
         // Create output file with pre-calculated size
-        let mut writer = WavWriter::create(output_path, spec)?;
+        let mut writer = WavWriter::create(output_path.with_extension(input_path.extension().unwrap()), output_spec)?;
         
         // Write frames directly without intermediate buffer
         for &frame_start in &selected_frames.1 {
@@ -149,12 +154,11 @@ impl AudioProcessor {
             for &sample in &selected_frames.0[frame_start..frame_end] {
                 // Write sample to both channels
                 writer.write_sample(denormalize_sample(sample))?;
-                writer.write_sample(denormalize_sample(sample))?;
             }
         }
 
         writer.finalize()?;
-        println!("Processing completed in {:?}", start.elapsed());
+        // println!("Processing completed in {:?}", start.elapsed());
         Ok(())
     }
 }
