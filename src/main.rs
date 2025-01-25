@@ -176,7 +176,7 @@ fn denormalize_sample(sample: f32) -> i32 {
 fn main() {
     #[derive(Parser)]
     #[command(name = "audio_silence_remover")]
-    #[command(about = "Removes silence from stereo WAV files")]
+    #[command(about = "Removes silence from stereo WAV files using VAD algorithm", long_about = None)]
     struct Args {
         #[arg(help = "Input WAV file")]
         input: PathBuf,
